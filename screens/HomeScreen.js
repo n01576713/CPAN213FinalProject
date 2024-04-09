@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import { View, Text, Image } from 'react-native';
 
 const Logo = () => (
@@ -8,17 +8,40 @@ const Logo = () => (
   />
 );
 
-
 //changing photos
-
-
-
+function GameSlides() {
+    const gameSlidesImages = [
+      'https://upload.wikimedia.org/wikipedia/en/5/5f/FIFA_08_Coverart.png',
+      'https://upload.wikimedia.org/wikipedia/en/6/6e/Sekiro_art.jpg',
+    ];
+  
+    const [currentSlideImage, setCurrentSlideImage] = useState(0);
+  
+    useEffect(() => {
+      const interval = setInterval(() => {
+        setCurrentSlideImage((prevIndex) => (prevIndex + 1) % gameSlidesImages.length);
+      }, 5000);
+  
+      return () => clearInterval(interval);
+    }, []);
+  
+    return (
+        //need to fix styling
+      <View>
+        <Image
+          source={{ uri: gameSlidesImages[currentSlideImage] }}
+          style={{ width: '80%', height: '80%' }}
+        />
+      </View>
+    );
+  }
 
 function HomeScreen() {
   return (
     <View>
       <Logo />
       <Text>Home Screen</Text>
+      <GameSlides />
     </View>
   );
 };

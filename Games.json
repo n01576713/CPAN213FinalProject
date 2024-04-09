@@ -1,0 +1,16 @@
+[
+    {
+        "id": 1,
+        "name": "Sekiro: Shadows Die Twice",
+        "image": "https://upload.wikimedia.org/wikipedia/en/6/6e/Sekiro_art.jpg",
+        "genre": ["Action", "Souls-Like"],
+        "price": 59.99
+    },
+    {
+        "id": 2,
+        "name": "FIFA 08",
+        "image": "https://upload.wikimedia.org/wikipedia/en/5/5f/FIFA_08_Coverart.png",
+        "genre": ["Sports"],
+        "price": 29.99
+    }
+]

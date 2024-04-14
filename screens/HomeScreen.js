@@ -13,6 +13,8 @@ function GameSlides() {
     const gameSlidesImages = [
       'https://upload.wikimedia.org/wikipedia/en/5/5f/FIFA_08_Coverart.png',
       'https://upload.wikimedia.org/wikipedia/en/6/6e/Sekiro_art.jpg',
+      'https://upload.wikimedia.org/wikipedia/en/7/77/Forza_Horizon_boxart.jpg',
+      'https://m.media-amazon.com/images/I/81iNiQ0Tb8L._AC_UF1000,1000_QL80_.jpg'
     ];
   
     const [currentSlideImage, setCurrentSlideImage] = useState(0);

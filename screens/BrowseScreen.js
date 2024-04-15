@@ -1,14 +1,15 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Picker } from '@react-native-picker/picker';
 import { View, Image, Text, StyleSheet, ScrollView, Alert, TouchableOpacity } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 
-const BrowseScreen = () => {
+const BrowseScreen = ({ route }) => {
   const [selectedGenre, setSelectedGenre] = useState('');
+  const [selectedPriceFilter, setSelectedPriceFilter] = useState('');
   const [displayedGames, setDisplayedGames] = useState([]);
+  const [selectedFavorites, setSelectedFavorites] = useState([]);
+  const navigation = useNavigation();
 
-  //Weird thing where the genres disappear after being selected in the picker (idk how to fix it)
-  //Comment out the whole useEffect section if you want to use direct json
-  /*
   const games = [
     {
         "id": 1,
@@ -149,58 +150,81 @@ const BrowseScreen = () => {
         "genre": ["Racing"],
         "price": 14.99
     }
-  ]
-  */
+]
 
-  useEffect(() => {
-    fetchGames();
-  }, []);
-
-  const fetchGames = async () => {
-    try {
-      const response = await fetch('http://10.0.2.2:3000/api/games');
-      const data = await response.json();
-      setDisplayedGames(data);
-    } catch (error) {
-      console.error('Error fetching games:', error);
-    }
-  };
-
-  //Switch displayedGames back to games if want to use direct json
-  const genres = [...new Set(displayedGames.flatMap(game => game.genre))];
+  const genres = [...new Set(games.flatMap(game => game.genre))];
 
   const handleGenreChange = (genre) => {
     setSelectedGenre(genre);
-  //Switch displayedGames back to games if want to use direct json
-    const gamesWithGenre = displayedGames.filter((game) => game.genre.includes(genre));
-    setDisplayedGames(gamesWithGenre);
+    filterGames(genre, selectedPriceFilter);
   };
-  
-  const handleImagePress = (gameName) => {
-    Alert.alert('Game Selected', `You have selected: ${gameName}`);
+
+  const handlePriceFilterChange = (priceFilter) => {
+    setSelectedPriceFilter(priceFilter);
+    filterGames(selectedGenre, priceFilter);
+  };
+
+  const filterGames = (genre, priceFilter) => {
+    let filteredGames = games;
+    if (genre) {
+      filteredGames = filteredGames.filter(game => game.genre.includes(genre));
+    }
+    if (priceFilter === 'lowToHigh') {
+      filteredGames.sort((a, b) => a.price - b.price);
+    } else if (priceFilter === 'highToLow') {
+      filteredGames.sort((a, b) => b.price - a.price);
+    }
+    setDisplayedGames(filteredGames);
+  };
+
+  const handleAddToFavorites = (game) => {
+    setSelectedFavorites([...selectedFavorites, game]);
+  };
+
+  const navigateToFavorites = () => {
+    if (selectedFavorites.length === 0) {
+      Alert.alert('No Games Selected', 'Please select some games to add to favorites.');
+      return;
+    }
+    navigation.navigate('Favorites', { favourites: selectedFavorites });
+    setSelectedFavorites([]);
   };
 
   return (
     <View style={styles.container}>
-      <Picker
-        selectedValue={selectedGenre}
-        style={styles.picker}
-        onValueChange={(itemValue) => handleGenreChange(itemValue)}>
-        <Picker.Item label="Select Game Genre" value=""/>
-        {genres.map((genre, index) => (
-          <Picker.Item key={index} label={genre} value={genre}/>
-        ))}
-      </Picker>
+      <View style={styles.pickerContainer}>
+        <Picker
+          selectedValue={selectedGenre}
+          style={styles.picker}
+          onValueChange={(itemValue) => handleGenreChange(itemValue)}>
+          <Picker.Item label="Select Game Genre" value=""/>
+          {genres.map((genre, index) => (
+            <Picker.Item key={index} label={genre} value={genre}/>
+          ))}
+        </Picker>
+        <Picker
+          selectedValue={selectedPriceFilter}
+          style={styles.picker}
+          onValueChange={(itemValue) => handlePriceFilterChange(itemValue)}>
+          <Picker.Item label="Sort by Price" value=""/>
+          <Picker.Item label="Low to High" value="lowToHigh"/>
+          <Picker.Item label="High to Low" value="highToLow"/>
+        </Picker>
+      </View>
       <ScrollView style={styles.scrollView} contentContainerStyle={styles.scrollViewContent}>
         {displayedGames.map((game) => (
-          <TouchableOpacity key={game.id} onPress={() => handleImagePress(game.name)}>
+          <TouchableOpacity key={game.id} onPress={() => handleAddToFavorites(game)}>
             <View style={styles.gameContainer}>
               <Image source={{ uri: game.image }} style={styles.image}/>
               <Text style={styles.gameName}>{game.name}</Text>
+              <Text style={styles.gameName}>${game.price}</Text>
             </View>
           </TouchableOpacity>
         ))}
       </ScrollView>
+      <TouchableOpacity style={styles.favoritesButton} onPress={navigateToFavorites}>
+        <Text style={styles.favoritesButtonText}>Add to Favorites</Text>
+      </TouchableOpacity>
     </View>
   );
 };
@@ -211,10 +235,28 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
+  pickerContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: '100%',
+    marginBottom: 20,
+  },
   picker: {
     height: 50,
-    width: 200,
+    width: '48%', // Adjust as needed
+  },
+  favoritesButton: {
+    backgroundColor: '#007bff',
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 5,
+    alignItems: 'center',
+    justifyContent: 'center',
     marginBottom: 20,
+  },
+  favoritesButtonText:{
+    color: 'white',
+    fontSize: 16,
   },
   scrollView: {
     flex: 1,

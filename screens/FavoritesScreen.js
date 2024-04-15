@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { View, Image, FlatList, TouchableOpacity } from 'react-native';
+import { View, Image, FlatList, TouchableOpacity, Button, StyleSheet } from 'react-native';
 
-const FavoritesScreen = ({ route }) => {
+const FavoritesScreen = ({ route, navigation }) => {
   const [favorites, setFavorites] = useState([]);
+  const [selectedGames, setSelectedGames] = useState([]);
 
   useEffect(() => {
     if (route?.params?.favourites) {
@@ -10,8 +11,18 @@ const FavoritesScreen = ({ route }) => {
     }
   }, [route]);
 
-  const handleImagePress = (game,price) => {
-    console.log('Selected game from favorites:', game);
+  const handleImagePress = (game) => {
+    const isSelected = selectedGames.some((selectedGame) => selectedGame.id === game.id);
+    if (isSelected) {
+      setSelectedGames(selectedGames.filter((selectedGame) => selectedGame.id !== game.id));
+    } else {
+      setSelectedGames([...selectedGames, game]);
+    }
+  };
+
+  const handleMoveToCart = () => {
+    navigation.navigate('Cart', { games: selectedGames });
+    setSelectedGames([]);
   };
 
   const removeFromFavorites = (gameId) => {
@@ -20,7 +31,7 @@ const FavoritesScreen = ({ route }) => {
   };
 
   return (
-    <View>
+    <View style={styles.container}>
       <FlatList
         data={favorites}
         numColumns={2}
@@ -34,8 +45,17 @@ const FavoritesScreen = ({ route }) => {
           </TouchableOpacity>
         )}
       />
+      {selectedGames.length > 0 && (
+        <Button title="Move to Cart" onPress={handleMoveToCart} />
+      )}
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+});
 
 export default FavoritesScreen;

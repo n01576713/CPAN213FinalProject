@@ -10,6 +10,7 @@ const BrowseScreen = ({ route }) => {
   const [selectedFavorites, setSelectedFavorites] = useState([]);
   const navigation = useNavigation();
 
+  //temp
   const games = [
     {
         "id": 1,
@@ -243,7 +244,7 @@ const styles = StyleSheet.create({
   },
   picker: {
     height: 50,
-    width: '48%', // Adjust as needed
+    width: '48%',
   },
   favoritesButton: {
     backgroundColor: '#007bff',

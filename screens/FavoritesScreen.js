@@ -1,9 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { View, Image, FlatList, TouchableOpacity, Button, StyleSheet } from 'react-native';
+import { addToCart } from '../slices/cart';
+import { useDispatch, useSelector } from 'react-redux';
 
 const FavoritesScreen = ({ route, navigation }) => {
   const [favorites, setFavorites] = useState([]);
   const [selectedGames, setSelectedGames] = useState([]);
+
+  //const dispatch = useDispatch();
+  //const reduxFavorites = useSelector(state => state.favorites);
 
   useEffect(() => {
     if (route?.params?.favourites) {
@@ -20,11 +25,18 @@ const FavoritesScreen = ({ route, navigation }) => {
     }
   };
 
+  /*
+  const handleMoveToCart = () => {
+    dispatch(addToCart(selectedGames));
+    setSelectedGames([]);
+  };
+  */
+  
   const handleMoveToCart = () => {
     navigation.navigate('Cart', { games: selectedGames });
     setSelectedGames([]);
   };
-
+ 
   const removeFromFavorites = (gameId) => {
     const updatedFavorites = favorites.filter((item) => item.id !== gameId);
     setFavorites(updatedFavorites);
@@ -55,6 +67,7 @@ const FavoritesScreen = ({ route, navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: 'lightgray'
   },
 });
 

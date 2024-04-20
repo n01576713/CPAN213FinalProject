@@ -1,11 +1,16 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, Button, StyleSheet, Alert } from 'react-native';
+import { removeFromCart, clearCart } from '../slices/cart';
+import { useSelector, useDispatch } from 'react-redux';
 
 const CartScreen = () => {
   const [cardNumber, setCardNumber] = useState('');
   const [address, setAddress] = useState('');
   const [name, setName] = useState('');
   const [cartItems, setCartItems] = useState([]);
+  
+  //const dispatch = useDispatch();
+  //const reduxCartItems = useSelector(state => state.cart.items);
 
   const handleBuy = () => {
     if (cartItems.length === 0) {
@@ -17,13 +22,8 @@ const CartScreen = () => {
     } else {
       Alert.alert('Purchase Completed', 'Thank you for your purchase!', [{ onPress: resetCheckout }]);
     }
+    dispatch(clearCart());
   };
-  
-
-
-
-
-
 
   const resetCheckout = () => {
     setCardNumber('');
@@ -31,6 +31,20 @@ const CartScreen = () => {
     setName('');
     setCartItems([]);
   };
+
+  /*
+  return (
+    <View style={styles.container}>
+      {cartItems.map((item, index) => (
+        <View key={index}>
+          <Text>{item.name} - ${item.price}</Text>
+          <Button title="Remove" onPress={() => dispatch(removeFromCart(item))} />
+        </View>
+      ))}
+      <Button title="Buy" onPress={handleBuy} />
+    </View>
+  );
+  */
 
   return (
     <View style={styles.container}>
@@ -70,6 +84,7 @@ const CartScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: 'lightgray',
     alignItems: 'center',
     justifyContent: 'center',
     padding: 20,
@@ -84,6 +99,7 @@ const styles = StyleSheet.create({
     padding:10,
   },
   cartHeading: {
+    fontWeight: 'bold',
     fontSize: 16,
     marginBottom: 10,
   },

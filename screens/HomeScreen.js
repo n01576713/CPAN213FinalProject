@@ -48,7 +48,7 @@ function HomeScreen() {
   return (
     <View style={styles.container}>
       <Logo />
-      <Text style={styles.description}>Welcome to GamesOverload! Explore the greatest games.</Text>
+      <Text style={styles.description}>Welcome to Games Overload! Explore the greatest games.</Text>
       <GameSlides />
     </View>
   );
@@ -57,6 +57,7 @@ function HomeScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: 'lightgray',
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -77,7 +78,8 @@ const styles = StyleSheet.create({
   },
   description: {
     color: 'black',
-    fontSize: 18,
+    fontWeight: 'bold',
+    fontSize: 25,
     textAlign: 'center',
     marginBottom: 20,
   },

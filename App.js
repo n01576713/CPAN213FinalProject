@@ -1,5 +1,10 @@
+//There are commented out areas where we tried to implement a self made api and redux but we were unsuccessful, and ran out of time.
+//There are also files alongside these such as store.js, server.js, cart.js, Games.json, that were for the api and redux.
+
 import React from 'react';
 import { Image } from 'react-native';
+import { Provider } from 'react-redux';
+import store from './store';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import HomeScreen from './screens/HomeScreen';
@@ -11,6 +16,7 @@ const Tab = createBottomTabNavigator();
 
 function App() {
   return (
+    <Provider store={store}>
     <NavigationContainer>
       <Tab.Navigator
         screenOptions={({ route }) => ({
@@ -35,6 +41,7 @@ function App() {
         <Tab.Screen name="Cart" component={CartScreen} />
       </Tab.Navigator>
     </NavigationContainer>
+    </Provider>
   );
 };
 
